@@ -14,6 +14,12 @@ import (
 	"time"
 )
 
+// TEMP VAR
+// to cover my usage of this package
+// (I want to force the items to expire
+//  even if they're being accessed constantly)
+var RenewKeepAlive = true
+
 // CacheTable is a table within the cache
 type CacheTable struct {
 	sync.RWMutex
@@ -245,7 +251,9 @@ func (table *CacheTable) Value(key interface{}, args ...interface{}) (*CacheItem
 
 	if ok {
 		// Update access counter and timestamp.
-		r.KeepAlive()
+		if RenewKeepAlive {
+			r.KeepAlive()
+		}
 		return r, nil
 	}
 
